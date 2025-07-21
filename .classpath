@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<classpath>
+	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER"/>
+	<classpathentry kind="src" path="board-service/src/main/java"/>
+	<classpathentry kind="src" path="board-service/src/test/java"/>
+	<classpathentry kind="src" path="match-management-service/src/main/java"/>
+	<classpathentry kind="src" path="match-management-service/src/test/java"/>
+	<classpathentry kind="src" path="Scotland Yard/src"/>
+	<classpathentry kind="src" path="Scotland Yard Test/src"/>
+	<classpathentry kind="lib" path="board-service/gradle/wrapper/gradle-wrapper.jar"/>
+	<classpathentry kind="lib" path="match-management-service/gradle/wrapper/gradle-wrapper.jar"/>
+	<classpathentry kind="lib" path="Scotland Yard/lib/log4j-api-2.13.3.jar"/>
+	<classpathentry kind="lib" path="Scotland Yard/lib/log4j-core-2.13.3.jar"/>
+	<classpathentry kind="output" path="bin"/>
+</classpath>
