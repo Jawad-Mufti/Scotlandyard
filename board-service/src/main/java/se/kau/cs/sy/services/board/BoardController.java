@@ -5,6 +5,7 @@ import java.io.InputStream;
 import java.util.HashSet;
 import java.util.Set;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -18,59 +19,73 @@ import se.kau.cs.sy.board.Link;
 import se.kau.cs.sy.board.Location;
 import se.kau.cs.sy.board.TransportType;
 import se.kau.cs.sy.match.ClassicConfiguration;
+import se.kau.cs.sy.services.board.StationRepository;
 import se.kau.cs.sy.transfer.board.SimpleBoardDTO;
 import se.kau.cs.sy.transfer.match.MatchConfigurationDTO;
+import se.kau.cs.sy.services.board.Station;
+
+import java.util.List;
 
 @RestController
 public class BoardController {
 
-	private Board board = Board.create();
-	
-	@GetMapping("/boards") 
-	public Set<SimpleBoardDTO> getBoards() {
-		Set<SimpleBoardDTO> result = new HashSet<SimpleBoardDTO>();
-		result.add(new SimpleBoardDTO(board.getId(), board.getName()));
-		return result;
-	}
-	
-	@GetMapping("/board/details")
-	public Board getBoardDetails() {
-		return board;
-	}
-	
-	@GetMapping("/links")
-	public Set<Link> getLinks(
-			@RequestParam(value = "node", defaultValue = "1") int nodeNumber,
-			@RequestParam(value = "type", defaultValue= "") TransportType type) {
-		
-		if (type == null) return board.getLinks(nodeNumber);
-		else return board.getLinks(nodeNumber, type);
-	}
-	
-	@GetMapping("/neighbours")
-	public Set<Integer> getNeighbours(
-			@RequestParam(value = "node", defaultValue = "1") int nodeNumber,
-			@RequestParam(value = "type", defaultValue = "") TransportType type) {
-		
-		if (type == null) return board.getNeighbourNodes(nodeNumber);
-		else return board.getNeighbourNodes(nodeNumber, type);
-	}
-	
-	@GetMapping("/location/{nodeNumber}")
-	public Location getLocation(@PathVariable int nodeNumber) {
-		return board.getLocation(nodeNumber);
-	}
-	
-	@GetMapping(
-		value="/map",
-		produces = MediaType.IMAGE_JPEG_VALUE)
-	public @ResponseBody byte[] getBoardImage() throws IOException {
-		InputStream is = getClass().getResourceAsStream("/static/map.jpg");
-		return is.readAllBytes();
-	}
-	
-	@GetMapping("/config")
-	public MatchConfigurationDTO getDefaultConfiguration() {
-		return new MatchConfigurationDTO.Builder(new ClassicConfiguration()).build();
-	}
+    @Autowired
+    private StationRepository stationRepository;
+
+    private Board board = Board.create();
+    
+    @GetMapping("/boards") 
+    public Set<SimpleBoardDTO> getBoards() {
+        Set<SimpleBoardDTO> result = new HashSet<SimpleBoardDTO>();
+        result.add(new SimpleBoardDTO(board.getId(), board.getName()));
+        return result;
+    }
+    
+    @GetMapping("/board/details")
+    public Board getBoardDetails() {
+        return board;
+    }
+    
+    @GetMapping("/links")
+    public Set<Link> getLinks(
+            @RequestParam(value = "node", defaultValue = "1") int nodeNumber,
+            @RequestParam(value = "type", defaultValue= "") TransportType type) {
+        
+        if (type == null) return board.getLinks(nodeNumber);
+        else return board.getLinks(nodeNumber, type);
+    }
+    
+    @GetMapping("/neighbours")
+    public Set<Integer> getNeighbours(
+            @RequestParam(value = "node", defaultValue = "1") int nodeNumber,
+            @RequestParam(value = "type", defaultValue = "") TransportType type) {
+        
+        if (type == null) return board.getNeighbourNodes(nodeNumber);
+        else return board.getNeighbourNodes(nodeNumber, type);
+    }
+    
+    @GetMapping("/location/{nodeNumber}")
+    public Location getLocation(@PathVariable int nodeNumber) {
+        return board.getLocation(nodeNumber);
+    }
+    
+    @GetMapping(
+        value="/map",
+        produces = MediaType.IMAGE_JPEG_VALUE)
+    public @ResponseBody byte[] getBoardImage() throws IOException {
+        InputStream is = getClass().getResourceAsStream("/static/map.jpg");
+        return is.readAllBytes();
+    }
+    
+    @GetMapping("/config")
+    public MatchConfigurationDTO getDefaultConfiguration() {
+        return new MatchConfigurationDTO.Builder(new ClassicConfiguration()).build();
+    }
+
+    @GetMapping("/neo4j/reachable")
+    public List<Station> getReachableStationsNeo4j(
+            @RequestParam List<Long> startIds,
+            @RequestParam List<String> transportSequence) {
+        return stationRepository.findReachableByTransportSequence(startIds, transportSequence);
+    }
 }

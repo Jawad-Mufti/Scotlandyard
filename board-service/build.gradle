@@ -16,6 +16,7 @@ repositories {
 dependencies {
 	implementation 'org.springframework.boot:spring-boot-starter-web'
 	implementation 'org.springframework.boot:spring-boot-starter-websocket'
+	implementation 'org.springframework.boot:spring-boot-starter-data-neo4j'
 	
 	// Add source dependency to the local Scotland Yard project
 	implementation files('../Scotland Yard/src')
