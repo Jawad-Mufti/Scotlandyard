@@ -18,23 +18,9 @@ dependencies {
 	implementation 'org.springframework.boot:spring-boot-starter-websocket'
 	implementation 'org.springframework.boot:spring-boot-starter-data-neo4j'
 	
-	// Add source dependency to the local Scotland Yard project
-	implementation files('../Scotland Yard/src')
-	implementation files('../Scotland Yard/lib/log4j-api-2.13.3.jar')
-	implementation files('../Scotland Yard/lib/log4j-core-2.13.3.jar')
-	
 	testImplementation('org.springframework.boot:spring-boot-starter-test') {
 		exclude group: 'org.junit.vintage', module: 'junit-vintage-engine'
 	}
-}
-
-// Add source sets to include Scotland Yard source code
-sourceSets {
-    main {
-        java {
-            srcDirs = ['src/main/java', '../Scotland Yard/src']
-        }
-    }
 }
 
 test {

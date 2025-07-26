@@ -24,15 +24,18 @@ public interface StationRepository extends Neo4jRepository<Station, Long> {
     List<Station> findShortestPath(Long fromId, Long toId);
 
     @Query("""
-        MATCH (start:Station)
-        WHERE id(start) IN $startIds
-        CALL apoc.path.expandConfig(start, {
-          relationshipFilter: 'LINKS_TO>',
-          labelFilter: 'Station',
-          sequence: $transportSequence
-        }) YIELD path
-        WITH last(nodes(path)) AS target
+        MATCH (start:Station)-[l:LINKS_TO]->(target:Station)
+        WHERE id(start) = $startId AND l.transportType = $transportType
         RETURN DISTINCT target
+        ORDER BY target.name
     """)
-    List<Station> findReachableByTransportSequence(List<Long> startIds, List<String> transportSequence);
+    List<Station> findReachableByTransportSequence(Long startId, String transportType);
+
+    @Query("""
+        MATCH (start:Station)-[l:LINKS_TO]->(target:Station)
+        WHERE id(start) = $startId
+        RETURN DISTINCT target
+        ORDER BY target.name
+    """)
+    List<Station> findReachableStations(Long startId);
 } 
