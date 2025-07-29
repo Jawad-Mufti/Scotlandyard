@@ -19,7 +19,8 @@ public interface StationRepository extends Neo4jRepository<Station, Long> {
         p = shortestPath((from)-[:LINKS_TO*..20]->(to))
         WHERE id(from) = $fromId AND id(to) = $toId
         UNWIND nodes(p) AS station
-        RETURN DISTINCT station
+        RETURN station
+        ORDER BY length(p), id(station)
     """)
     List<Station> findShortestPath(Long fromId, Long toId);
 

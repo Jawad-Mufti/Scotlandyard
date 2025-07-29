@@ -14,7 +14,7 @@ export class BoardService {
   
   private hostServer  = window.location.hostname;
   private hostPort = '7000';
-  		
+		
   constructor(private http: HttpClient,
 			  private domSanitizer: DomSanitizer) { }
   
